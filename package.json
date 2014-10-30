@@ -1,0 +1,27 @@
+{
+  "name": "twidle",
+  "version": "1.0.0",
+  "description": "find an awesome twitter handle",
+  "main": "twidle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomasbelin4/twidle.git"
+  },
+  "keywords": [
+    "twitter",
+    "username",
+    "handle"
+  ],
+  "author": "Thomas Belin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thomasbelin4/twidle/issues"
+  },
+  "homepage": "https://github.com/thomasbelin4/twidle",
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
+  }
+}
