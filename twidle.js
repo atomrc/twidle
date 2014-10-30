@@ -1,4 +1,4 @@
-/*global require, process*/
+/*global require, process, setInterval*/
 
 var http = require("https"),
     generator = require("./lib/generator"),
