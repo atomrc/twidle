@@ -5,6 +5,7 @@ var http = require("https"),
     pattern = process.argv[2] || "",
     batchSize = 100, //the size of each name testing batch (the number of concurrent requests sent to twitter)
     availableNames = [], //all the available names the script will find
+    displayedNamesIndex = 0,
     request = {
         method: "HEAD",
         host: "twitter.com",
@@ -85,7 +86,6 @@ var http = require("https"),
 
             req = http.request(request, getResponseHandler(name));
             req.end();
-
             nbRequest++;
         });
     };
@@ -99,14 +99,18 @@ http.globalAgent.maxSockets = batchSize;
 //here the magic happens
 setInterval(function () {
     "use strict";
-    var todo = Math.min(totalSize - done, batchSize);
-    if (todo <= 0) {
-        console.log(availableNames);
-        process.kill();
-    }
     process.stdout.clearLine();  // clear current text
     process.stdout.cursorTo(0);  // move cursor to beginning of line
-    process.stdout.write(done + "/" + totalSize + " (" + availableNames.length + " found)");
+
+    var todo = Math.min(totalSize - done, batchSize);
+    if (todo <= 0) { process.kill(); }
+
+    for (var i = displayedNamesIndex; i < availableNames.length; i++) {
+        console.log(availableNames[i]);
+    }
+
+    displayedNamesIndex = availableNames.length;
+    process.stdout.write(done + "/" + totalSize + " (\u001b[32m" + availableNames.length + "\u001b[39m found)");
     if (done === nbRequest) {
         runBatch(pattern, totalSize - todo - done, todo);
     }
