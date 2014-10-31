@@ -1,7 +1,6 @@
 /*global require, process, setInterval*/
 
-var http = require("https"),
-    generator = require("./lib/generator"),
+var generator = require("./lib/generator"),
     checker = require("./lib/checker");
 
 var runBatch = function (pattern, index, size, callback) {
@@ -21,11 +20,18 @@ var runBatch = function (pattern, index, size, callback) {
         batchSize = 100,
         totalSize = generator.getTotalCombinations(pattern),
         nbRequest = 0,
-        done = 0;
+        done = 0,
+        requestCallback = function (name) {
+            if (name) {
+                availables.push(name);
+            }
+            done++;
+        };
 
 
     process.stdout.write("Good lord, there are " + totalSize + " twitter names to test ... here we go\n");
-    http.globalAgent.maxSockets = batchSize;
+
+    checker.setBatchSize(batchSize);
 
     //here the magic happens
     setInterval(function () {
@@ -43,8 +49,8 @@ var runBatch = function (pattern, index, size, callback) {
         process.stdout.write(done + "/" + totalSize + " (\u001b[32m" + availables.length + "\u001b[39m found)");
 
         if (done === nbRequest) {
-            runBatch(pattern, totalSize - todo - done, todo, function (name) { availables.push(name); });
-            nbRequest = todo;
+            runBatch(pattern, done, todo, requestCallback);
+            nbRequest += todo;
         }
     }, 100);
 }());
